@@ -16,8 +16,8 @@ void decrypt(string inputFile, string outputFile)
         string line, decrypted;
         string blockSizeInput;
         int blockSize;
-        int k;
-        char e, t;
+        int index, lineCounter = 0;
+        char decryptChar, decryptText;
         string permutation;
         string input;
 
@@ -38,41 +38,55 @@ void decrypt(string inputFile, string outputFile)
                         decrypted = "";
                         for (int i = 0; i < line.length(); i = i + blockSize)
                         {
-                                k = 0;
+                                index = 0;
 
                                 for (int j = i; j < i + blockSize; j++)
                                 {
-                                        int d = char(permutation[k++]) - 48;
-                                        if ((i + d - 1) < line.length())
+                                        int permIndex = char(permutation[index++]) - 48;
+                                        if ((i + permIndex - 1) < line.length())
                                         {
-                                                e = line[i + (d - 1)];
+                                                decryptChar= line[i + (permIndex - 1)];
                                         }
                                         else
                                         {
-                                                e = ' ';
+                                                decryptChar = 'x';
                                         }
 
                                         if (j < line.length())
                                         {
-                                                t = line[j];
+                                                decryptText = line[j];
                                         }
                                         else
                                         {
-                                                t = ' ';
+                                                decryptText = 'x';
                                         }
-                                        decrypted += e;
-                                        // std::cout << to_string(j % blockSize) + " " + t + " " + to_string(d) + " " + e << " ,";
+                                        decrypted += decryptChar;
+                                        // std::cout << to_string(j % blockSize) + " " + t + " " + to_string(permIndex) + " " + e << " ,";
                                 }
                                 // std::cout << "." << endl;
+                        }
+                        int trimLine = 0;
+                        for (int i = decrypted.length()-1; i > 0 ; i--) {
+                                //std::cout << i << endl;
+                                if (decrypted[i]=='x') {
+                                        trimLine++;
+                                        //std::cout << "trimLine: " + to_string(trimLine) << endl;
+
+                                } else {
+                                        decrypted.erase(decrypted.length()-trimLine);
+                                        break;
+                                }
                         }
                         std::cout << "decrypted ciphertext file: " + decrypted << endl;
 
                         //char buffer[] = decrypted;
-                        ofstream myofile(outputFile, ios::out | ios::binary);
+                        //ofstream myofile(outputFile, (lineCounter++>0) ? std::ios::app : std::ios::out | std::ios::binary);
+                        ofstream myofile(outputFile, std::ios::out | std::ios::binary);
+
                         if (myofile.is_open())
                         {
                                 //myofile.write(buffer, decrypted.length());
-                                myofile << decrypted;
+                                myofile << decrypted << endl;
                                 myofile.close();
                         }
                         else

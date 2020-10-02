@@ -16,8 +16,8 @@ void encrypt(string inputFile, string outputFile)
         string line, encrypted;
         string blockSizeInput;
         int blockSize;
-        int k;
-        char e, t;
+        int index, lineCounter = 0;
+        char encryptChar, encryptText;
         string permutation;
         string input;
 
@@ -36,43 +36,46 @@ void encrypt(string inputFile, string outputFile)
                 {
                         //std::cout << line << endl;
                         encrypted = "";
+                        lineCounter++;
                         for (int i = 0; i < line.length(); i = i + blockSize)
                         {
-                                k = 0;
+                                index = 0;
 
                                 for (int j = i; j < i + blockSize; j++)
                                 {
-                                        int d = char(permutation[k++]) - 48;
-                                        if ((i + d - 1) < line.length())
+                                        int permIndex = char(permutation[index++]) - 48;
+                                        if ((i + permIndex - 1) < line.length())
                                         {
-                                                e = line[i + (d - 1)];
+                                                encryptChar = line[i + (permIndex - 1)];
                                         }
                                         else
                                         {
-                                                e = 'x';
+                                                encryptChar = 'x';
                                         }
 
                                         if (j < line.length())
                                         {
-                                                t = line[j];
+                                                encryptText = line[j];
                                         }
                                         else
                                         {
-                                                t = 'x';
+                                                encryptText = 'x';
                                         }
-                                        encrypted += e;
-                                        // std::cout << to_string(j % blockSize) + " " + t + " " + to_string(d) + " " + e << " ,";
+                                        encrypted += encryptChar;
+                                        // std::cout << to_string(j % blockSize) + " " + t + " " + to_string(permIndex) + " " + e << " ,";
                                 }
                                 // std::cout << "." << endl;
                         }
                         std::cout << "Encrypted ciphertext file: " + encrypted << endl;
 
                         //char buffer[] = encrypted;
-                        ofstream myofile(outputFile, ios::out | ios::binary);
+                        //std::cout << lineCounter << " ";
+                        //ofstream myofile(outputFile, (lineCounter++>1) ? std::ios::app : std::ios::out | std::ios::binary); //if multiple lines
+                        ofstream myofile(outputFile, std::ios::out | std::ios::binary); //if multiple lines
                         if (myofile.is_open())
                         {
                                 //myofile.write(buffer, encrypted.length());
-                                myofile << encrypted;
+                                myofile << encrypted << endl;
                                 myofile.close();
                         }
                         else
