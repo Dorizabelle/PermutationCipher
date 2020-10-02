@@ -8,12 +8,12 @@
 #include <fstream>
 #include <string>
 // #include <sstream>
-#include "encrypt.h"
+#include "decrypt.h"
 using namespace std;
 
-void encrypt(string inputFile, string outputFile)
+void decrypt(string inputFile, string outputFile)
 {
-        string line, encrypted;
+        string line, decrypted;
         string blockSizeInput;
         int blockSize;
         int k;
@@ -21,7 +21,7 @@ void encrypt(string inputFile, string outputFile)
         string permutation;
         string input;
 
-        std::cout << "Welcome to the Permutation Cipher \nSelected Mode: Encrypt \nInput File: " + inputFile + "\nOutput File: " + outputFile << endl;
+        std::cout << "Welcome to the Permutation Cipher \nSelected Mode: Decrypt \nInput File: " + inputFile + "\nOutput File: " + outputFile << endl;
         std::cout << "Please enter the block size (2-8) and the permutation (e.g., 4 2413): "
                   << "";
         std::cin >> blockSizeInput >> permutation;
@@ -35,7 +35,7 @@ void encrypt(string inputFile, string outputFile)
                 while (getline(myfile, line))
                 {
                         //std::cout << line << endl;
-                        encrypted = "";
+                        decrypted = "";
                         for (int i = 0; i < line.length(); i = i + blockSize)
                         {
                                 k = 0;
@@ -49,7 +49,7 @@ void encrypt(string inputFile, string outputFile)
                                         }
                                         else
                                         {
-                                                e = 'x';
+                                                e = ' ';
                                         }
 
                                         if (j < line.length())
@@ -58,21 +58,21 @@ void encrypt(string inputFile, string outputFile)
                                         }
                                         else
                                         {
-                                                t = 'x';
+                                                t = ' ';
                                         }
-                                        encrypted += e;
+                                        decrypted += e;
                                         // std::cout << to_string(j % blockSize) + " " + t + " " + to_string(d) + " " + e << " ,";
                                 }
                                 // std::cout << "." << endl;
                         }
-                        std::cout << "Encrypted ciphertext file: " + encrypted << endl;
+                        std::cout << "decrypted ciphertext file: " + decrypted << endl;
 
-                        //char buffer[] = encrypted;
+                        //char buffer[] = decrypted;
                         ofstream myofile(outputFile, ios::out | ios::binary);
                         if (myofile.is_open())
                         {
-                                //myofile.write(buffer, encrypted.length());
-                                myofile << encrypted;
+                                //myofile.write(buffer, decrypted.length());
+                                myofile << decrypted;
                                 myofile.close();
                         }
                         else
